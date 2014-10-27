@@ -2,14 +2,14 @@ SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL';
 
-CREATE SCHEMA IF NOT EXISTS `mydb` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci ;
-USE `mydb` ;
+CREATE SCHEMA IF NOT EXISTS `sitap` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci ;
+USE `sitap` ;
 
 -- -----------------------------------------------------
--- Table `mydb`.`tbl_usuario`
+-- Table `sitap`.`tbl_usuario`
 -- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `mydb`.`tbl_usuario` (
-  `idtbl_usuario` INT NOT NULL ,
+CREATE  TABLE IF NOT EXISTS `sitap`.`tbl_usuario` (
+  `idtbl_usuario` INT NOT NULL AUTO_INCREMENT ,
   `nome` VARCHAR(45) NULL ,
   `senha` VARCHAR(20) NULL ,
   `email` VARCHAR(45) NULL ,
@@ -24,46 +24,47 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`tbl_artigo`
+-- Table `sitap`.`tbl_artigo`
 -- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `mydb`.`tbl_artigo` (
-  `idtbl_artigo` INT NOT NULL ,
+CREATE  TABLE IF NOT EXISTS `sitap`.`tbl_artigo` (
+  `idtbl_artigo` INT NOT NULL AUTO_INCREMENT ,
   `titulo` VARCHAR(45) NULL ,
   `corpo` TEXT NULL ,
   `data` DATETIME NULL ,
   `idusuario` INT NOT NULL ,
+  `like` INT NULL ,
   PRIMARY KEY (`idtbl_artigo`) ,
   INDEX `fk_tbl_artigo_tbl_usuario1` (`idusuario` ASC) ,
   CONSTRAINT `fk_tbl_artigo_tbl_usuario1`
     FOREIGN KEY (`idusuario` )
-    REFERENCES `mydb`.`tbl_usuario` (`idtbl_usuario` )
+    REFERENCES `sitap`.`tbl_usuario` (`idtbl_usuario` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`tbl_fotos`
+-- Table `sitap`.`tbl_fotos`
 -- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `mydb`.`tbl_fotos` (
-  `idtbl_fotos` INT NOT NULL ,
+CREATE  TABLE IF NOT EXISTS `sitap`.`tbl_fotos` (
+  `idtbl_fotos` INT NOT NULL AUTO_INCREMENT ,
   `foto` VARCHAR(45) NULL ,
   `idartigo` INT NOT NULL ,
   PRIMARY KEY (`idtbl_fotos`) ,
   INDEX `fk_tbl_fotos_tbl_artigo1` (`idartigo` ASC) ,
   CONSTRAINT `fk_tbl_fotos_tbl_artigo1`
     FOREIGN KEY (`idartigo` )
-    REFERENCES `mydb`.`tbl_artigo` (`idtbl_artigo` )
+    REFERENCES `sitap`.`tbl_artigo` (`idtbl_artigo` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`tbl_categorias`
+-- Table `sitap`.`tbl_categorias`
 -- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `mydb`.`tbl_categorias` (
-  `idtbl_categorias` INT NOT NULL ,
+CREATE  TABLE IF NOT EXISTS `sitap`.`tbl_categorias` (
+  `idtbl_categorias` INT NOT NULL AUTO_INCREMENT ,
   `categoria` VARCHAR(45) NULL ,
   `descricao` VARCHAR(100) NULL ,
   PRIMARY KEY (`idtbl_categorias`) )
@@ -71,9 +72,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`artigo_has_categoria`
+-- Table `sitap`.`artigo_has_categoria`
 -- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `mydb`.`artigo_has_categoria` (
+CREATE  TABLE IF NOT EXISTS `sitap`.`artigo_has_categoria` (
   `tbl_artigo_idtbl_artigo` INT NOT NULL ,
   `tbl_categorias_idtbl_categorias` INT NOT NULL ,
   PRIMARY KEY (`tbl_artigo_idtbl_artigo`, `tbl_categorias_idtbl_categorias`) ,
@@ -81,35 +82,37 @@ CREATE  TABLE IF NOT EXISTS `mydb`.`artigo_has_categoria` (
   INDEX `fk_tbl_artigo_has_tbl_categorias_tbl_artigo1` (`tbl_artigo_idtbl_artigo` ASC) ,
   CONSTRAINT `fk_tbl_artigo_has_tbl_categorias_tbl_artigo1`
     FOREIGN KEY (`tbl_artigo_idtbl_artigo` )
-    REFERENCES `mydb`.`tbl_artigo` (`idtbl_artigo` )
+    REFERENCES `sitap`.`tbl_artigo` (`idtbl_artigo` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_tbl_artigo_has_tbl_categorias_tbl_categorias1`
     FOREIGN KEY (`tbl_categorias_idtbl_categorias` )
-    REFERENCES `mydb`.`tbl_categorias` (`idtbl_categorias` )
+    REFERENCES `sitap`.`tbl_categorias` (`idtbl_categorias` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`tbl_comentario`
+-- Table `sitap`.`tbl_comentario`
 -- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `mydb`.`tbl_comentario` (
+CREATE  TABLE IF NOT EXISTS `sitap`.`tbl_comentario` (
+  `idcomentario` INT NOT NULL AUTO_INCREMENT ,
   `idusuario` INT NOT NULL ,
-  `idartigo` INT NOT NULL ,
   `corpo` VARCHAR(200) NULL ,
   `data` DATETIME NULL ,
-  INDEX `fk_tbl_usuario_has_tbl_artigo_tbl_artigo1` (`idartigo` ASC) ,
+  `tbl_artigo_idtbl_artigo` INT NOT NULL ,
   INDEX `fk_tbl_usuario_has_tbl_artigo_tbl_usuario1` (`idusuario` ASC) ,
+  PRIMARY KEY (`idcomentario`) ,
+  INDEX `fk_tbl_comentario_tbl_artigo1` (`tbl_artigo_idtbl_artigo` ASC) ,
   CONSTRAINT `fk_tbl_usuario_has_tbl_artigo_tbl_usuario1`
     FOREIGN KEY (`idusuario` )
-    REFERENCES `mydb`.`tbl_usuario` (`idtbl_usuario` )
+    REFERENCES `sitap`.`tbl_usuario` (`idtbl_usuario` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_tbl_usuario_has_tbl_artigo_tbl_artigo1`
-    FOREIGN KEY (`idartigo` )
-    REFERENCES `mydb`.`tbl_artigo` (`idtbl_artigo` )
+  CONSTRAINT `fk_tbl_comentario_tbl_artigo1`
+    FOREIGN KEY (`tbl_artigo_idtbl_artigo` )
+    REFERENCES `sitap`.`tbl_artigo` (`idtbl_artigo` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
