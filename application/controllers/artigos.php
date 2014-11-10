@@ -40,7 +40,7 @@ class Artigos extends CI_Controller {
             /* Recebe os dados do formulário (visão) */
             $data['titulo'] = $this->input->post('titulo');
             $data['corpo'] = $this->input->post('corpo');
-            //$data['data'] = $this->input->post('data');
+            $data['data'] = $this->input->post('data');
 
             /* Carrega o modelo */
             $this->load->model('artigo_model');
@@ -89,12 +89,12 @@ class Artigos extends CI_Controller {
                 'field' => 'corpo',
                 'label' => 'Corpo',
                 'rules' => ''
-            )/*,
+            ),
             array(
                 'field' => 'data',
                 'label' => 'Data',
                 'rules' => ''
-            )*/);
+            ));
         $this->form_validation->set_rules($validations);
 
         /* Executa a validação... */
@@ -106,7 +106,7 @@ class Artigos extends CI_Controller {
             $data['idartigo'] = $this->input->post('idartigo');
             $data['titulo'] = ucwords($this->input->post('titulo'));
             $data['corpo'] = strtolower($this->input->post('corpo'));
-            //$data['data'] = strtolower($this->input->post('data'));
+            $data['data'] = strtolower($this->input->post('data'));
             
 
             /* Carrega o modelo */
