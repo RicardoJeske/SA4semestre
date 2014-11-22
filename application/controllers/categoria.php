@@ -3,18 +3,19 @@
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
-class Categorias extends CI_Controller {
+class Categoria extends CI_Controller {
 
     function __construct() {
         parent::__construct();
         /* Carrega o modelo */
-        $this->load->model('categorias_model');
+        $this->load->model('categoria_model');
     }
 
     function index() {
-        $data['titulo'] = "CRUD com CodeIgniter | Cadastro de Categorias";
-        $data['categorias'] = $this->categorias_model->listar();
-        $this->load->view('categorias_view.php', $data);
+        $data['titulo'] = "CRUD com CodeIgniter | Cadastro de Pessoas";
+        $this->load->helper('form');
+        $data['categoria'] = $this->categoria_model->listar();
+        $this->load->view('categoria_view.php', $data);
     }
 
     function inserir() {
@@ -26,10 +27,9 @@ class Categorias extends CI_Controller {
         $this->form_validation->set_error_delimiters('<span>', '</span>');
 
         /* Define as regras para validação */
-        $this->form_validation->set_rules('categoria', 'Categoria', 'required|max_length[15]');
-        $this->form_validation->set_rules('descricao', 'Descricao', 'required|max_length[100]');
-        
-
+        $this->form_validation->set_rules('nome', 'Nome', '');
+        $this->form_validation->set_rules('descricao', 'Descrição', '');
+       
         /* Executa a validação e caso houver erro... */
         if ($this->form_validation->run() === FALSE) {
             /* Chama a função index do controlador */
@@ -37,18 +37,15 @@ class Categorias extends CI_Controller {
             /* Senão, caso sucesso na validação... */
         } else {
             /* Recebe os dados do formulário (visão) */
-            $data['categoria'] = $this->input->post('categoria');
+            $data['nome'] = $this->input->post('nome');
             $data['descricao'] = $this->input->post('descricao');
-            
-
-            /* Carrega o modelo */
-            $this->load->model('categorias_model');
+           
 
             /* Chama a função inserir do modelo */
-            if ($this->categorias_model->inserir($data)) {
-                redirect('categorias');
+            if ($this->categoria_model->inserir($data)) {
+                header('location: categoria');
             } else {
-                log_message('error', 'Erro ao inserir a categoria.');
+                log_message('error', 'Erro ao inserir a pessoa.');
             }
         }
     }
@@ -56,20 +53,19 @@ class Categorias extends CI_Controller {
     function editar($id) {
 
         /* Aqui vamos definir o título da página de edição */
-        $data['titulo'] = "CRUD com CodeIgniter | Editar Categoria";
+        $data['titulo'] = "CRUD com CodeIgniter | Editar Pessoa";
 
         /* Carrega o modelo */
-        $this->load->model('categorias_model');
+        $this->load->model('categoria_model');
 
         /* Busca os dados da pessoa que será editada (id) */
-        $data['dados_categoria'] = $this->categorias_model->editar($id);
-        
+        $data['dados_categoria'] = $this->categoria_model->editar($id);
+
         /* Carrega a página de edição com os dados da pessoa */
-        $this->load->view('categorias_edit', $data);
+        $this->load->view('categoria_edit', $data);
     }
 
     function atualizar() {
-
         /* Carrega a biblioteca do CodeIgniter responsável pela validação dos formulários */
         $this->load->library('form_validation');
 
@@ -80,38 +76,46 @@ class Categorias extends CI_Controller {
           na função inserir do controlador, porém estou mudando a forma de escrita */
         $validations = array(
             array(
-                'field' => 'categoria',
-                'label' => 'Categoria',
-                'rules' => 'required|max_length[15]'
+                'field' => 'nome',
+                'label' => 'Nome',
+                'rules' => ''
             ),
             array(
                 'field' => 'descricao',
                 'label' => 'Descrição',
-                'rules' => 'required|max_length[100]'
-            ));
+                'rules' => ''
+            )
+        );
         $this->form_validation->set_rules($validations);
+        
+        
+
 
         /* Executa a validação... */
         if ($this->form_validation->run() === FALSE) {
             /* Caso houver erro chama função editar do controlador novamente */
-            $this->editar($this->input->post('idcategoria'));
+            $this->editar($this->input->post('id'));
         } else {
             /* Senão obtém os dados do formulário */
-            $data['idcategoria'] = $this->input->post('idcategoria');
-            $data['categoria'] = ucwords($this->input->post('categoria'));
-            $data['descricao'] = strtolower($this->input->post('descricao'));
+            $data['id'] = $this->input->post('id');
+            $data['nome'] = ucwords($this->input->post('nome'));
+            $data['descricao'] = ucwords($this->input->post('descricao'));
             
-
+            
+            
             /* Carrega o modelo */
-            $this->load->model('categorias_model');
+            $this->load->model('categoria_model');
 
             /* Executa a função atualizar do modelo passando como parâmetro os dados obtidos do formulário */
-            if ($this->categorias_model->atualizar($data)) {
+            if ($this->categoria_model->atualizar($data)) {
                 /* Caso sucesso ao atualizar, recarrega a página principal */
-                redirect('categorias');
+               
+                
+               
+                redirect('categoria');
             } else {
                 /* Senão exibe a mensagem de erro */
-                log_message('error', 'Erro ao atualizar a categoria.');
+                log_message('error', 'Erro ao atualizar a pessoa.');
             }
         }
     }
@@ -119,15 +123,15 @@ class Categorias extends CI_Controller {
     function deletar($id) {
 
         /* Carrega o modelo */
-        $this->load->model('categorias_model');
+        $this->load->model('categoria_model');
 
         /* Executa a função deletar do modelo passando como parâmetro o id da pessoa */
-        if ($this->categorias_model->deletar($id)) {
+        if ($this->categoria_model->deletar($id)) {
             /* Caso sucesso ao atualizar, recarrega a página principal */
-            redirect('categorias');
+            redirect('categoria');
         } else {
             /* Senão exibe a mensagem de erro */
-            log_message('error', 'Erro ao deletar a categoria.');
+            log_message('error', 'Erro ao deletar a pessoa.');
         }
     }
 

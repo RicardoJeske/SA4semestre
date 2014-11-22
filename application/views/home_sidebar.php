@@ -6,12 +6,14 @@
 -->
 <html>
     <head>
-        <title>Striped by HTML5 UP</title>
+        
+        <title>Contêxtil Ltda.</title>
         <meta http-equiv="content-type" content="text/html; charset=utf-8" />
         <meta name="description" content="" />
         <meta name="keywords" content="" />
-        <link type=”text/css” rel=”stylesheet” href=”<?php echo base_url(); ?>http://localhost/SA4semestre/assets/css/style.css”/>
+        <link type="text/css" rel="stylesheet" href="http://localhost/SA4semestre/assets/css/style.css"/>
         <!--[if lte IE 8]><script src="css/ie/html5shiv.js"></script><![endif]-->
+
         <script src="http://localhost/SA4semestre/assets/js/jquery.min.js"></script>
         <script src="http://localhost/SA4semestre/assets/js/skel.min.js"></script>
         <script src="http://localhost/SA4semestre/assets/js/skel-layers.min.js"></script>
@@ -33,20 +35,22 @@
         <!-- Wrapper -->
         <div id="wrapper">
 
-
+            <!-- Content -->
+            
             <!-- Sidebar -->
             <div id="sidebar">
 
                 <!-- Logo -->
-                <h1 id="logo"><a href="#">STRIPED</a></h1>
+                <h1 id="logo"><a href="<?php echo base_url(); ?>">CONTÊXTIL</a></h1>
 
                 <!-- Nav -->
                 <nav id="nav">
                     <ul>
-                        <li class="current"><a href="#">Latest Post</a></li>
+                         <li><a href="<?php echo base_url();?>login">Login</a></li>
                         <li><a href="<?php echo base_url();?>pessoas">Cadastro de Usuário</a></li>
-                        <li><a href="#">About Me</a></li>
-                        <li><a href="#">Contact Me</a></li>
+                       
+                        <li><a href="<?php echo base_url();?>artigo">Criar Notícias</a></li>
+                        <li><a href="home/logout">Logout</a></li>
                     </ul>
                 </nav>
 
